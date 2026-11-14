@@ -114,7 +114,7 @@ function BrainApp({ ctx }: { ctx: WindowCtx }) {
       {state.eggs.length >= EGGS.length && (
         <button className="file-row" onClick={() => ctx.open("file:reward.txt", { file: {
           id: "reward.txt", name: "reward.txt", kind: "text · legendary", meta: "you earned this", modified: "now",
-          body: "## reward.txt\n\nyou found all 11 eggs. you clicked 3 stars, read the recycle bin's secrets,\ntyped 'krithi' into the void, and ran `coffee` in a fake terminal.\n\nthe reward is this: the hiring_challenge session on this desktop is now\nofficially a good omen. go be someone's favourite candidate.\n\n— krithi\n",
+          body: "## reward.txt\n\nyou found all 11 eggs. you clicked 3 stars, read the recycle bin's secrets,\ntyped 'krithi' into the void, and ran `coffee` in a fake terminal.\n\nthe reward is this: the session on this desktop is now\nofficially a good omen. go be someone's favourite candidate.\n\n— krithi\n",
         } })}>
           <div className="f-ico" style={{ background: "var(--butter)" }}><Star size={16} /></div>
           <div style={{ flex: 1 }}>
@@ -525,7 +525,7 @@ function TerminalApp({ ctx }: { ctx: WindowCtx }) {
         out("commands: help · who am i · neofetch · projects · contact · certs · skills · ls · ls brain/ · cat <file> · pwd · coffee · sudo sleep · sudo hire · achievements · resume · open <app> · theme <cream|butter|lavender> · clear · exit");
         break;
       case "who": case "whoami":
-        out("Krithi U K — applied AI engineer. document pipelines by day, saxophone by night. currently: hiring_challenge mode.");
+        out("Krithi U K — applied AI engineer. document pipelines by day, saxophone by night. currently: open to new opportunities.");
         break;
       case "neofetch": {
         out("  ┌──────┐   OS: krithi.os v7.0");
