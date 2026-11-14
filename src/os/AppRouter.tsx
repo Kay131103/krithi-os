@@ -36,42 +36,44 @@ function ResumeApp() {
         <h2 style={{ color: "var(--ink)", letterSpacing: 0, fontFamily: "'Plus Jakarta Sans'", fontSize: 26, border: "none" }}>
           {resume.name}
         </h2>
-        <div className="res-meta">{resume.title}</div>
-        <div className="res-meta">{resume.location}</div>
-        <div className="res-meta" style={{ marginTop: 6 }}>
-          <a href={`mailto:${resume.email}`}>{resume.email}</a> · <a href={`tel:${resume.phone.replace(/\s/g, "")}`}>{resume.phone}</a> ·{" "}
-          <a href={resume.github} target="_blank" rel="noreferrer">github.com/Kay131103</a> ·{" "}
-          <a href={resume.linkedin} target="_blank" rel="noreferrer">linkedin.com/in/krithi-u-k</a>
-        </div>
+        <div className="res-meta">{resume.location} · {resume.phone} · <a href={`mailto:${resume.email}`}>{resume.email}</a></div>
+        <div className="res-meta"><a href={resume.linkedin} target="_blank" rel="noreferrer">LinkedIn</a> · <a href="https://portfolio.krithiuk.space" target="_blank" rel="noreferrer">Portfolio</a> · <a href={resume.github} target="_blank" rel="noreferrer">GitHub</a></div>
+        <div className="res-meta" style={{ marginTop: 6 }}>{resume.title}</div>
 
-        <h2>PROFESSIONAL SUMMARY</h2>
-        <p>{resume.summary}</p>
+        <h2>SUMMARY</h2>
+        <ul>{resume.summary.map((b: string, i: number) => <li key={i}>{b}</li>)}</ul>
 
-        <h2>PROFESSIONAL EXPERIENCE</h2>
-        {resume.experience.map((x, i) => (
-          <div key={i} style={{ marginBottom: 12 }}>
-            <h3>{x.role} — {x.org}</h3>
-            <div className="res-meta">{x.period}</div>
-            <ul>{x.bullets.map((b, j) => <li key={j}>{b}</li>)}</ul>
-          </div>
-        ))}
+        <h2>CORE EXPERTISE</h2>
+        <p style={{ fontSize: 12.5 }}>{resume.coreExpertise.join(" | ")}</p>
 
-        <h2>PROJECTS</h2>
-        <ul>{resume.projects.map((p, i) => <li key={i}><b>{p.name}</b> — {p.desc}</li>)}</ul>
-
-        <h2>EDUCATION</h2>
-        {resume.education.map((e, i) => (
-          <div key={i}>
-            <h3>{e.degree}</h3>
-            <div className="res-meta">{e.school} · {e.period}</div>
-          </div>
-        ))}
-
-        <h2>SKILLS</h2>
+        <h2>TECHNICAL SKILLS</h2>
         <ul>{Object.entries(resume.skills).map(([k, v]) => <li key={k}><b>{k}:</b> {v}</li>)}</ul>
 
-        <h2>CERTIFICATIONS</h2>
-        <ul>{resume.certifications.map((c, i) => <li key={i}>{c}</li>)}</ul>
+        <h2>PROFESSIONAL EXPERIENCE</h2>
+        {resume.experience.map((x: any, i: number) => (
+          <div key={i} style={{ marginBottom: 12 }}>
+            <h3>{x.org} | {x.role}</h3>
+            <div className="res-meta">{x.period}</div>
+            {x.projects.map((pj: any, j: number) => (
+              <div key={j} style={{ marginTop: 6 }}>
+                <b style={{ fontSize: 13 }}>{pj.name}</b>
+                <ul>{pj.bullets.map((b: string, k: number) => <li key={k}>{b}</li>)}</ul>
+              </div>
+            ))}
+          </div>
+        ))}
+
+        <h2>SELECTED PROJECTS</h2>
+        <ul>{resume.selectedProjects.map((p: any, i: number) => <li key={i}><b>{p.name}:</b> {p.desc}</li>)}</ul>
+
+        <h2>EDUCATION</h2>
+        <div>
+          <h3>{resume.education.degree}</h3>
+          <div className="res-meta">{resume.education.school} | {resume.education.period}</div>
+        </div>
+
+        <h2>PROFESSIONAL CERTIFICATIONS</h2>
+        <ul>{resume.certifications.map((c: string, i: number) => <li key={i}>{c}</li>)}</ul>
       </div>
     </div>
   );
