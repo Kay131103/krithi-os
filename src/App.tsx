@@ -54,7 +54,7 @@ function Shell() {
   return (
     <>
       <Desktop ctx={wmWithLoading} />
-      {loading && <LoadingModal onDone={() => setLoading(false)} />}
+      {loading && <LoadingModal onDone={() => setLoading(false)} onInvestigate={() => { setLoading(false); wm.open("bugs_i_fixed"); }} />}
     </>
   );
 }

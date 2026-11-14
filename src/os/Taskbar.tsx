@@ -7,7 +7,7 @@ import { useAchievements, useSettings, useToasts } from "@/system/os";
 export function Taskbar({ ctx, openAchievements }: {
   ctx: WindowCtx; openAchievements: () => void;
 }) {
-  const { play, sound, setSound } = useSettings();
+  const { play, sound, setSound, sliders } = useSettings();
   const { state, trackEgg } = useAchievements();
   const { push } = useToasts();
   const [startOpen, setStartOpen] = useState(false);
@@ -113,6 +113,9 @@ export function Taskbar({ ctx, openAchievements }: {
         })}
 
         {chaosMode && <span className="chip-btn mode">CHAOS MODE</span>}
+        {sliders.sleep >= 70 && <span className="chip-btn mode">bedtime</span>}
+        {sliders.tolerance <= 30 && <span className="chip-btn mode">impatient</span>}
+        {ctx.windows.some((w) => w.id.startsWith("perf:")) && <span className="chip-btn mode">perf</span>}
 
         <button className="clock" aria-label="System clock" data-testid="taskbar-clock" onClick={onClockClick}>{clock}</button>
 

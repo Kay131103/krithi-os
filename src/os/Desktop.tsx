@@ -28,11 +28,13 @@ export function Desktop({ ctx }: { ctx: WindowCtx }) {
 
   /* toast on entering desktop */
   useEffect(() => {
-    push({
-      kind: "system",
-      title: "krithi.exe is running",
-      desc: "37 tabs restored. welcome to the desktop." + (visits > 1 ? " (visit #" + visits + ")" : ""),
-    });
+    if (visits > 1) {
+      push({ kind: "system", title: "welcome back · last seen earlier today",
+             desc: `curiosity ${sliders.curiosity} · overthinking ${sliders.overthinking} — restored.` });
+      push({ kind: "system", title: "krithi.exe is running", desc: "37 tabs restored." });
+    } else {
+      push({ kind: "system", title: "krithi.exe is running", desc: "37 tabs restored. welcome to the desktop." });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

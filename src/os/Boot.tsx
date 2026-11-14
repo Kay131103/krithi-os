@@ -9,7 +9,7 @@ const BOOT_LINES = [
 ];
 
 export function BootScreen({ onDone }: { onDone: (openResume?: boolean) => void }) {
-  const { visits } = useSettings();
+  const { visits, sliders } = useSettings();
   const { trackEgg } = useAchievements();
   const { push } = useToasts();
   const [lines, setLines] = useState<string[]>([]);
@@ -25,7 +25,7 @@ export function BootScreen({ onDone }: { onDone: (openResume?: boolean) => void 
       ? [
           "warm boot (visit #" + visits + ")",
           "welcome back. last session: " + new Date().toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }),
-          "restoring personality ... curiosity X · overthinking Y · sleep Z · patience W",
+          "restoring personality ... curiosity " + sliders.curiosity + " · overthinking " + sliders.overthinking + " · sleep " + sliders.sleep + " · patience " + sliders.tolerance,
         ]
       : BOOT_LINES;
     let i = 0;

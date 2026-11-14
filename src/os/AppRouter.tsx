@@ -682,6 +682,9 @@ function SettingsApp({ ctx }: { ctx: WindowCtx }) {
   const prev = useRef({ chaos: false, impatient: false });
 
   useEffect(() => {
+    const impatient = sliders.tolerance <= 30;
+    if (impatient && !prev.current.impatient) { ctx.open("perf:analysis", { perf: true }); }
+    prev.current.impatient = impatient;
     const c = sliders.curiosity >= 70 && sliders.overthinking >= 70;
     if (c && !prev.current.chaos) {
       unlock("chaos_engineer");
@@ -822,7 +825,7 @@ function AchievementsApp() {
 }
 
 /* ============================ LOADING MODAL (tolerance LOW) ============================ */
-export function LoadingModal({ onDone }: { onDone: () => void }) {
+export function LoadingModal({ onDone, onInvestigate }: { onDone: () => void; onInvestigate?: () => void }) {
   const { sliders } = useSettings();
   const [p, setP] = useState(0);
   useEffect(() => {
@@ -836,7 +839,8 @@ export function LoadingModal({ onDone }: { onDone: () => void }) {
         <div className="load-bar"><div style={{ width: p + "%" }} /></div>
         <div className="mono-sub">(tolerance for slow apps is low. the OS noticed.)</div>
         <div style={{ display: "flex", gap: 9, justifyContent: "center", marginTop: 10 }}>
-          <button className="btn btn-blue" onClick={onDone}>wait it out</button>
+          <button className="btn btn-blue" onClick={onInvestigate}>Investigate the case</button>
+          <button className="btn" onClick={onDone}>wait it out</button>
         </div>
       </div>
     </div>
