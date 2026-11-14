@@ -55,10 +55,24 @@ export const DESKTOP_ICONS: AppId[] = [
   "terminal.exe", "37_tabs_open", "personality_settings.exe",
 ];
 
+const CUSTOM_TITLES: Record<string, string> = {
+  "perf:analysis": "performance_analysis.exe",
+  "exp:rag_chatbot": "rag_chatbot — experiments",
+  "exp:realtime_voice_agent": "realtime_voice_agent — experiments",
+  "exp:ai_price_list_extraction": "ai_price_list_extraction — experiments",
+  "exp:construction_cost_estimation": "construction_cost_estimation — experiments",
+  "exp:product_alternative_discovery": "product_alternative_discovery — experiments",
+  "exp:ai_code_review_agent": "ai_code_review_agent — experiments",
+  "exp:video_captioning_research": "video_captioning_research — experiments",
+  "exp:knowledge_graph_search": "knowledge_graph_search — experiments",
+};
+
 export function appDef(id: AppId): AppDef {
   const known = APPS.find((a) => a.id === id);
   if (known) return known;
+  if (CUSTOM_TITLES[id]) return { id, title: CUSTOM_TITLES[id], icon: FlaskConical as any, color: "elec" };
   // custom windows (file:*, exp:*, perf:*) get a sensible fallback
-  const pretty = id.replace(/^(file:|exp:|perf:)/, "").replace(/\.[a-z0-9]+$/i, "");
-  return { id, title: pretty, icon: FileCode as any, color: "sand" };
+  const pretty = id.replace(/^(file:|exp:|perf:)/, "");
+  const isFile = id.startsWith("file:");
+  return { id, title: pretty, icon: (isFile ? FileCode : FlaskConical) as any, color: isFile ? "sand" : "elec" };
 }
