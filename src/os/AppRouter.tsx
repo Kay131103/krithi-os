@@ -87,7 +87,7 @@ function BrainApp({ ctx }: { ctx: WindowCtx }) {
   return (
     <div>
       <div className="mono-sub">
-        {files.length} files · ({state.eggs.length}/11 easter eggs found so far.)
+        {files.length} files · ({state.eggs.length}/{EGGS.length} easter eggs found so far.)
         {sliders.curiosity >= 70 && <span style={{ color: "var(--elec)" }}> curiosity-gated file unlocked.</span>}
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -535,7 +535,7 @@ function TerminalApp({ ctx }: { ctx: WindowCtx }) {
         out("  └──────┘   Sleep daemon: " + sliders.sleep + "%");
         out("             Patience: " + sliders.tolerance + "%");
         out("             Tabs: 37 open, 0 closable");
-        out(`             Eggs found: ${state.eggs.length}/11`);
+        out(`             Eggs found: ${state.eggs.length}/${EGGS.length}`);
         break;
       }
       case "projects":
@@ -573,7 +573,7 @@ function TerminalApp({ ctx }: { ctx: WindowCtx }) {
         else out(`sudo: ${arg || "…"}: not a real command, but respect the ambition.`);
         break;
       case "achievements":
-        out(`achievements: ${state.unlocked.length}/7 · easter eggs: ${state.eggs.length}/11`);
+        out(`achievements: ${state.unlocked.length}/${ACHIEVEMENTS.length} · easter eggs: ${state.eggs.length}/${EGGS.length}`);
         out("opening the tracker…");
         ctx.open("achievements");
         break;
@@ -801,7 +801,7 @@ function AchievementsApp() {
     <div>
       <div className="mono-sub">progress is saved in your browser. no accounts, no tracking — just badges.</div>
       <div style={{ fontFamily: "'JetBrains Mono', monospace", fontWeight: 700, fontSize: 15, marginBottom: 12 }}>
-        {state.unlocked.length}/7 achievements · {state.eggs.length}/11 easter eggs
+        {state.unlocked.length}/{ACHIEVEMENTS.length} achievements · {state.eggs.length}/{EGGS.length} easter eggs
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
         {ACHIEVEMENTS.map((a) => {
@@ -847,6 +847,40 @@ export function LoadingModal({ onDone, onInvestigate }: { onDone: () => void; on
   );
 }
 
+/* ============================ DEV MODE (konami) ============================ */
+function DevModeApp() {
+  const { state } = useAchievements();
+  const { sliders } = useSettings();
+  const remaining = EGGS.filter((e) => !state.eggs.includes(e.id));
+  const dump = JSON.stringify({ achievements: state.unlocked, eggs: state.eggs, sliders, visitsHint: "saved in localStorage" }, null, 2);
+  return (
+    <div>
+      <div className="mono-sub">you typed the old code. ↑↑↓↓←→←→BA. of course you know the code.</div>
+      <div className="section-label">THE ENGINE</div>
+      <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13.5 }}>
+        <li><b>autodiff:</b> hand-written reverse-mode engine — <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12 }}>src/engine.js</span></li>
+        <li><b>network:</b> tanh MLP · SGD · MSE, all on Value nodes</li>
+        <li><b>this OS:</b> React 18 + Framer Motion · 0 backend · everything in localStorage</li>
+        <li><b>assets:</b> 0 audio files (sounds are synthesized oscillators), 0 trackers</li>
+      </ul>
+      <div className="section-label">LIVE STATE (this browser)</div>
+      <pre style={{ background: "var(--term-bg)", color: "var(--term-green)", borderRadius: 10, padding: "12px 14px", fontSize: 11.5, overflowX: "auto", whiteSpace: "pre-wrap" }}>{dump}</pre>
+      <div className="section-label">EGGS STILL HIDING ({remaining.length} left)</div>
+      {remaining.length === 0 ? (
+        <div className="quote-block">none. every stone unturned. the OS salutes you.</div>
+      ) : (
+        <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+          {remaining.map((e) => <span key={e.id} className="chip chip-coral">{e.label}</span>)}
+        </div>
+      )}
+      <div className="section-label">GO DEEPER</div>
+      <a className="btn btn-ghost" href="https://github.com/Kay131103/krithi-os" target="_blank" rel="noreferrer">
+        <ExternalLink size={13} /> view the source — it's all here
+      </a>
+    </div>
+  );
+}
+
 /* ============================ ROUTER ============================ */
 export function WindowFrame({ win, ctx }: { win: WinState; ctx: any }) {
   const props = ctx.focusedAppProps[win.id] ?? {};
@@ -867,6 +901,7 @@ export function WindowFrame({ win, ctx }: { win: WinState; ctx: any }) {
     case win.id.startsWith("exp:"): content = <ExperimentDetailApp project={props.project} />; break;
     case win.id.startsWith("file:"): content = <FileViewerApp file={props.file} />; break;
     case win.id.startsWith("perf:"): content = <PerformanceApp ctx={ctx} />; break;
+    case win.id === "dev_mode.exe": content = <DevModeApp />; break;
     default: content = <div className="mono-sub">…</div>;
   }
   return (

@@ -7,6 +7,7 @@ import { Taskbar } from "@/os/Taskbar";
 import { WindowFrame } from "@/os/AppRouter";
 
 const SECRET_WORD = "krithi";
+const KONAMI = ["arrowup","arrowup","arrowdown","arrowdown","arrowleft","arrowright","arrowleft","arrowright","b","a"];
 
 const BASE_NOTES = [
   { text: "reminder: the tabs are load-bearing", cls: "hidden md:block", style: { top: 340, right: 30, rotate: 3 } },
@@ -50,6 +51,24 @@ export function Desktop({ ctx }: { ctx: WindowCtx }) {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
+  }, [trackEgg]);
+
+  /* konami code → developer mode */
+  useEffect(() => {
+    let seq: string[] = [];
+    const onKey = (e: KeyboardEvent) => {
+      const t = e.target as HTMLElement;
+      if (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable) return;
+      seq = [...seq, e.key.toLowerCase()].slice(-KONAMI.length);
+      if (seq.join(",") === KONAMI.join(",")) {
+        seq = [];
+        trackEgg("egg_konami_dev");
+        ctx.open("dev_mode.exe");
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trackEgg]);
 
   const overthinkingHigh = sliders.overthinking >= 70;

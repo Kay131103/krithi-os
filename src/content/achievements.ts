@@ -62,4 +62,5 @@ export const EGGS: { id: string; label: string }[] = [
   { id: "egg_logo_poker", label: "egg_logo_poker" },
   { id: "egg_wallpaper_cleaner", label: "egg_wallpaper_cleaner" },
   { id: "egg_secret_knock", label: "egg_secret_knock" },
+  { id: "egg_konami_dev", label: "egg_konami_dev" },
 ];

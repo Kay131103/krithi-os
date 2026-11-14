@@ -148,7 +148,7 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
   const trackEgg = useCallback((id: string) => {
     if (achRef.current.eggs.includes(id)) return;
     commit((cur) => ({ ...cur, eggs: [...cur.eggs, id] }));
-    push({ kind: "egg", title: `Easter egg found (${achRef.current.eggs.length}/11)`, desc: "somewhere, a checkbox ticks. keep digging." });
+    push({ kind: "egg", title: `Easter egg found (${achRef.current.eggs.length}/${EGGS.length})`, desc: "somewhere, a checkbox ticks. keep digging." });
     play("egg");
     if (achRef.current.eggs.length >= EGGS.length && !achRef.current.unlocked.includes("no_stone_unturned")) {
       unlock("no_stone_unturned");
