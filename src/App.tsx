@@ -1,4 +1,23 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { Component, useMemo, useRef, useState } from "react";
+
+class ErrorBoundary extends Component<{ children: React.ReactNode }, { crashed: boolean }> {
+  state = { crashed: false };
+  static getDerivedStateFromError() { return { crashed: true }; }
+  render() {
+    if (this.state.crashed) {
+      return (
+        <div className="boot-screen">
+          <div className="boot-block" style={{ textAlign: "center" }}>
+            <h1 className="font-display" style={{ fontSize: 28, marginBottom: 10 }}>the OS crashed. it happens.</h1>
+            <p style={{ color: "var(--ink-soft)", marginBottom: 18 }}>a window hit an unexpected state. rebooting is safe — your progress (achievements, eggs, sliders) is saved.</p>
+            <button className="btn btn-blue" onClick={() => window.location.reload()}>reboot krithi.exe</button>
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 import { OSProvider, ToastViewport, useSettings, useToasts, Toast } from "@/system/os";
 import { BootScreen } from "@/os/Boot";
 import { Desktop } from "@/os/Desktop";
@@ -42,8 +61,10 @@ function Shell() {
 
 export default function App() {
   return (
-    <OSProvider>
-      <Shell />
-    </OSProvider>
+    <ErrorBoundary>
+      <OSProvider>
+        <Shell />
+      </OSProvider>
+    </ErrorBoundary>
   );
 }

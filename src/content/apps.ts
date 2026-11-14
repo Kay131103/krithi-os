@@ -1,6 +1,6 @@
 import {
   Brain, Bug, FlaskConical, Music, FolderHeart, Sparkles, FileText,
-  Trash2, Terminal as TerminalIcon, Globe, SlidersHorizontal,
+  Trash2, Terminal as TerminalIcon, Globe, SlidersHorizontal, FileCode,
 } from "lucide-react";
 import type { ComponentType } from "react";
 
@@ -56,5 +56,9 @@ export const DESKTOP_ICONS: AppId[] = [
 ];
 
 export function appDef(id: AppId): AppDef {
-  return APPS.find((a) => a.id === id)!;
+  const known = APPS.find((a) => a.id === id);
+  if (known) return known;
+  // custom windows (file:*, exp:*, perf:*) get a sensible fallback
+  const pretty = id.replace(/^(file:|exp:|perf:)/, "").replace(/\.[a-z0-9]+$/i, "");
+  return { id, title: pretty, icon: FileCode as any, color: "sand" };
 }
