@@ -1,0 +1,1 @@
+{"root":["./src/App.tsx","./src/main.tsx","./src/content/achievements.ts","./src/content/apps.ts","./src/content/brainFiles.ts","./src/content/projects.ts","./src/content/resume.ts","./src/content/tabs.ts","./src/os/AppRouter.tsx","./src/os/Boot.tsx","./src/os/Desktop.tsx","./src/os/Taskbar.tsx","./src/os/WindowManager.tsx","./src/system/os.tsx"],"version":"5.9.3"}
