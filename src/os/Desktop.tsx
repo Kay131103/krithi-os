@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Folder, RefreshCw, LayoutGrid, ExternalLink } from "lucide-react";
 import { ToastViewport, useAchievements, useSettings, useToasts } from "@/system/os";
 import { DESKTOP_ICONS, appDef, colorMap, AppId } from "@/content/apps";
 import { WindowCtx } from "@/os/WindowManager";
@@ -26,6 +27,9 @@ export function Desktop({ ctx }: { ctx: WindowCtx }) {
   const [starWiggle, setStarWiggle] = useState(false);
   const starPokes = useRef(0);
   const desktopRef = useRef<HTMLDivElement>(null);
+  const [ctxMenu, setCtxMenu] = useState<{ x: number; y: number } | null>(null);
+  const [walkingFolder, setWalkingFolder] = useState<{ x: number; y: number } | null>(null);
+  const [shake, setShake] = useState(false);
 
   /* toast on entering desktop */
   useEffect(() => {
@@ -91,12 +95,39 @@ export function Desktop({ ctx }: { ctx: WindowCtx }) {
     push({ kind: "egg", title: "the empty desktop — cleaner here, isn't it? the tabs heard you and refused to leave." });
   };
 
+  /* right-click context menu (desktop background only) */
+  const onContextMenu = (e: React.MouseEvent) => {
+    const t = e.target as HTMLElement;
+    if (t.closest(".os-window") || t.closest(".taskbar") || t.closest("button") || t.closest("a") || t.closest("input")) return;
+    e.preventDefault();
+    setCtxMenu({ x: Math.min(e.clientX, window.innerWidth - 190), y: Math.min(e.clientY, window.innerHeight - 210) });
+  };
+  const closeCtxMenu = () => setCtxMenu(null);
+  const ctxAction = (action: string) => {
+    closeCtxMenu();
+    if (action === "newtab") {
+      push({ kind: "system", title: "tab budget exhausted", desc: "the OS is at 37/37 tab capacity. a new tab would destabilize reality." });
+    } else if (action === "refresh") {
+      setShake(true);
+      setTimeout(() => setShake(false), 500);
+      push({ kind: "system", title: "desktop refreshed", desc: "nothing changed. the desktop was already clean. suspicious." });
+    } else if (action === "display") {
+      ctx.open("personality_settings.exe");
+    } else if (action === "newfolder") {
+      setWalkingFolder({ x: Math.min(ctxMenu!.x, window.innerWidth - 140), y: Math.min(ctxMenu!.y, window.innerHeight - 160) });
+      trackEgg("egg_right_click_new_folder");
+      push({ kind: "egg", title: "a new folder has been created.", desc: "the OS named it new_folder(37). of course it did." });
+    }
+  };
+
   return (
     <div
       ref={desktopRef}
-      className={`os-desktop theme-${theme} ${sliders.sleep >= 70 ? "bedtime" : ""}`}
+      className={`os-desktop theme-${theme} ${sliders.sleep >= 70 ? "bedtime" : ""} ${shake ? "shake" : ""}`}
       data-desktop="main"
       onDoubleClick={desktopDouble}
+      onContextMenu={onContextMenu}
+      onClick={closeCtxMenu}
     >
       <div className="os-main" data-testid="desktop-main">
         <div className="topmeta">KRITHI.OS // user: krithi</div>
@@ -171,6 +202,44 @@ export function Desktop({ ctx }: { ctx: WindowCtx }) {
       {ctx.windows.map((w) => (
         <WindowFrame key={w.id + JSON.stringify(ctx.focusedAppProps[w.id] ?? {})} win={w} ctx={ctx} />
       ))}
+
+      {/* right-click context menu */}
+      <AnimatePresence>
+        {ctxMenu && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.94 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.94 }}
+            transition={{ duration: 0.12 }}
+            className="ctx-menu"
+            style={{ left: ctxMenu.x, top: ctxMenu.y }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button onClick={() => ctxAction("newtab")}>new tab</button>
+            <button onClick={() => ctxAction("refresh")}><RefreshCw size={12} /> refresh desktop</button>
+            <button onClick={() => ctxAction("newfolder")}><Folder size={12} /> new folder</button>
+            <div className="ctx-sep" />
+            <button onClick={() => ctxAction("display")}><LayoutGrid size={12} /> display settings</button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* the folder that walks away */}
+      <AnimatePresence>
+        {walkingFolder && (
+          <motion.div
+            className="walking-folder"
+            initial={{ opacity: 0, scale: 0.5, x: walkingFolder.x, y: walkingFolder.y, rotate: 0 }}
+            animate={{ opacity: [0, 1, 1, 1], scale: 1, rotate: [0, -6, 6, -4, 0], x: [walkingFolder.x, walkingFolder.x + 60, walkingFolder.x + 140, window.innerWidth + 90], y: [walkingFolder.y, walkingFolder.y - 18, walkingFolder.y - 6, walkingFolder.y - 30] }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 3.4, times: [0, 0.12, 0.4, 1], ease: "easeInOut" }}
+            onAnimationComplete={() => setWalkingFolder(null)}
+          >
+            <Folder size={34} />
+            <span>new_folder(37)</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <Taskbar ctx={ctx} openAchievements={() => ctx.open("achievements")} />
       <ToastViewport />
