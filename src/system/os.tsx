@@ -37,7 +37,7 @@ export const useToasts = () => useContext(ToastContext);
 
 /* ---------------- settings ---------------- */
 export type Sliders = { curiosity: number; overthinking: number; sleep: number; tolerance: number };
-export const DEFAULT_SLIDERS: Sliders = { curiosity: 70, overthinking: 69, sleep: 30, tolerance: 60 };
+export const DEFAULT_SLIDERS: Sliders = { curiosity: 60, overthinking: 60, sleep: 30, tolerance: 60 };
 export type Theme = "cream" | "butter" | "lavender";
 
 type SettingsCtx = {

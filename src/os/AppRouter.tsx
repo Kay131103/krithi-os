@@ -743,7 +743,7 @@ function SettingsApp({ ctx }: { ctx: WindowCtx }) {
             {p.name}
           </button>
         ))}
-        <button className="btn btn-ghost" style={{ padding: "7px 12px", fontSize: 12 }} onClick={() => { setSliders({ curiosity: 70, overthinking: 69, sleep: 30, tolerance: 60 }); play("click"); }}>
+        <button className="btn btn-ghost" style={{ padding: "7px 12px", fontSize: 12 }} onClick={() => { setSliders({ curiosity: 60, overthinking: 60, sleep: 30, tolerance: 60 }); play("click"); }}>
           Reset to defaults
         </button>
       </div>
