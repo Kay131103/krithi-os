@@ -132,43 +132,40 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
   /* achievements */
   const [ach, setAch] = useState<AchState>(() => ({ ...DEFAULT_ACH, ...(lsGet("achievements") ?? {}) }));
   const achRef = useRef(ach); achRef.current = ach;
-  const update = useCallback((fn: (s: AchState) => AchState) => {
-    setAch((s) => { const n = fn(s); lsSet("achievements", n); return n; });
+  /* synchronous commit: mutate the ref immediately so rapid successive
+     calls (double-clicks) always dedup against the freshest state */
+  const commit = useCallback((fn: (s: AchState) => AchState) => {
+    achRef.current = fn(achRef.current);
+    lsSet("achievements", achRef.current);
+    setAch(achRef.current);
   }, []);
   const unlock = useCallback((id: string) => {
-    const s = achRef.current;
-    if (s.unlocked.includes(id)) return;
+    if (achRef.current.unlocked.includes(id)) return;
     const def = ACHIEVEMENTS.find((a) => a.id === id)!;
-    update((cur) => ({ ...cur, unlocked: [...cur.unlocked, id] }));
+    commit((cur) => ({ ...cur, unlocked: [...cur.unlocked, id] }));
     push({ kind: "achievement", title: `Achievement unlocked — ${def.name}`, desc: def.description });
-  }, [update, push]);
+  }, [commit, push]);
   const trackEgg = useCallback((id: string) => {
-    const s = achRef.current;
-    if (s.eggs.includes(id)) return;
-    update((cur) => {
-      const eggs = [...cur.eggs, id];
-      return { ...cur, eggs };
-    });
-    push({ kind: "egg", title: `Easter egg found (${achRef.current.eggs.length + 1}/11)`, desc: "somewhere, a checkbox ticks. keep digging." });
+    if (achRef.current.eggs.includes(id)) return;
+    commit((cur) => ({ ...cur, eggs: [...cur.eggs, id] }));
+    push({ kind: "egg", title: `Easter egg found (${achRef.current.eggs.length}/11)`, desc: "somewhere, a checkbox ticks. keep digging." });
     play("egg");
-    setTimeout(() => {
-      if (!achRef.current.unlocked.includes("no_stone_unturned") && achRef.current.eggs.length >= EGGS.length) {
-        unlock("no_stone_unturned");
-      }
-    }, 100);
-  }, [update, push, play, unlock]);
+    if (achRef.current.eggs.length >= EGGS.length && !achRef.current.unlocked.includes("no_stone_unturned")) {
+      unlock("no_stone_unturned");
+    }
+  }, [commit, push, play, unlock]);
   const markFolder = useCallback((id: string) => {
-    update((cur) => ({ ...cur, folders: cur.folders.includes(id) ? cur.folders : [...cur.folders, id] }));
-  }, [update]);
+    commit((cur) => ({ ...cur, folders: cur.folders.includes(id) ? cur.folders : [...cur.folders, id] }));
+  }, [commit]);
   const markTab = useCallback((id: string) => {
-    update((cur) => ({ ...cur, tabs: cur.tabs.includes(id) ? cur.tabs : [...cur.tabs, id] }));
-  }, [update]);
+    commit((cur) => ({ ...cur, tabs: cur.tabs.includes(id) ? cur.tabs : [...cur.tabs, id] }));
+  }, [commit]);
   const markStage = useCallback((i: number) => {
-    update((cur) => ({ ...cur, stages: cur.stages.includes(i) ? cur.stages : [...cur.stages, i] }));
-  }, [update]);
+    commit((cur) => ({ ...cur, stages: cur.stages.includes(i) ? cur.stages : [...cur.stages, i] }));
+  }, [commit]);
   const bumpTerminal = useCallback(() => {
-    update((cur) => ({ ...cur, terminalCount: cur.terminalCount + 1 }));
-  }, [update]);
+    commit((cur) => ({ ...cur, terminalCount: cur.terminalCount + 1 }));
+  }, [commit]);
 
   /* folder → achievement */
   useEffect(() => {
