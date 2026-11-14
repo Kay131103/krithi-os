@@ -434,7 +434,7 @@ body {
 .os-window-body::-webkit-scrollbar-thumb, .term::-webkit-scrollbar-thumb, .start-menu::-webkit-scrollbar-thumb { background: var(--sand); border-radius: 6px; }
 
 .ctx-menu {
-  position: fixed; z-index: 9600;
+  position: fixed; z-index: 99999;
   width: 186px; background: var(--paper);
   border: 2px solid var(--ink); border-radius: 10px;
   box-shadow: var(--win-shadow); padding: 5px;
@@ -453,12 +453,22 @@ body {
   40% { transform: translate(5px, -2px); } 60% { transform: translate(-3px, 1px); } 80% { transform: translate(3px, -1px); }
 }
 .walking-folder {
-  position: fixed; z-index: 9500; pointer-events: none;
+  position: fixed; z-index: 99998; pointer-events: none;
   display: flex; flex-direction: column; align-items: center; gap: 3px;
   color: var(--ink);
+  animation: folder-walk 3.4s ease-in-out forwards;
 }
 .walking-folder svg { color: var(--sand); filter: drop-shadow(2px 2px 0 var(--ink)); }
 .walking-folder span { font-family: "JetBrains Mono", monospace; font-size: 9.5px; color: var(--ink-soft); }
+@keyframes folder-walk {
+  0%   { opacity: 0; transform: scale(0.5) rotate(0deg); }
+  10%  { opacity: 1; transform: scale(1.05) rotate(-7deg); }
+  16%  { transform: scale(1) rotate(6deg); }
+  22%  { transform: rotate(-4deg); }
+  28%  { transform: rotate(0deg) translateX(60px) translateY(-14px); }
+  40%  { transform: translateX(140px) translateY(-4px); }
+  100% { opacity: 1; transform: translateX(96vw) translateY(-30px) rotate(0deg); }
+}
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01s !important; transition-duration: 0.05s !important; }

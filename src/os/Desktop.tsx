@@ -117,6 +117,7 @@ export function Desktop({ ctx }: { ctx: WindowCtx }) {
       setWalkingFolder({ x: Math.min(ctxMenu!.x, window.innerWidth - 140), y: Math.min(ctxMenu!.y, window.innerHeight - 160) });
       trackEgg("egg_right_click_new_folder");
       push({ kind: "egg", title: "a new folder has been created.", desc: "the OS named it new_folder(37). of course it did." });
+      setTimeout(() => setWalkingFolder(null), 3400);
     }
   };
 
@@ -224,22 +225,13 @@ export function Desktop({ ctx }: { ctx: WindowCtx }) {
         )}
       </AnimatePresence>
 
-      {/* the folder that walks away */}
-      <AnimatePresence>
-        {walkingFolder && (
-          <motion.div
-            className="walking-folder"
-            initial={{ opacity: 0, scale: 0.5, x: walkingFolder.x, y: walkingFolder.y, rotate: 0 }}
-            animate={{ opacity: [0, 1, 1, 1], scale: 1, rotate: [0, -6, 6, -4, 0], x: [walkingFolder.x, walkingFolder.x + 60, walkingFolder.x + 140, window.innerWidth + 90], y: [walkingFolder.y, walkingFolder.y - 18, walkingFolder.y - 6, walkingFolder.y - 30] }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 3.4, times: [0, 0.12, 0.4, 1], ease: "easeInOut" }}
-            onAnimationComplete={() => setWalkingFolder(null)}
-          >
-            <Folder size={34} />
-            <span>new_folder(37)</span>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* the folder that walks away (pure CSS — works even with reduced motion) */}
+      {walkingFolder && (
+        <div className="walking-folder" style={{ left: walkingFolder.x, top: walkingFolder.y }}>
+          <Folder size={34} />
+          <span>new_folder(37)</span>
+        </div>
+      )}
 
       <Taskbar ctx={ctx} openAchievements={() => ctx.open("achievements")} />
       <ToastViewport />
