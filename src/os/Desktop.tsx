@@ -78,7 +78,7 @@ export function Desktop({ ctx }: { ctx: WindowCtx }) {
       onDoubleClick={desktopDouble}
     >
       <div className="os-main" data-testid="desktop-main">
-        <div className="topmeta">KRITHI.OS // user: krithi · session: hiring_challenge</div>
+        <div className="topmeta">KRITHI.OS // user: krithi</div>
 
         <div className="hero">
           <h1>
