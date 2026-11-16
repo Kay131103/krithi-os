@@ -111,7 +111,7 @@ export const experiments: Experiment[] = [
   },
   {
     id: "rag_chatbot",
-    name: "rag_chatbot",
+    name: "docbrain",
     tagline: "Streaming cited answers with query rewriting over ChromaDB",
     tech: ["LangGraph", "ChromaDB", "FastAPI", "React", "SSE", "Docker"],
     role: "Builder — end to end",
@@ -143,7 +143,7 @@ export const experiments: Experiment[] = [
   },
   {
     id: "realtime_voice_agent",
-    name: "realtime_voice_agent",
+    name: "voxbox",
     tagline: "Speech-to-speech assistant with barge-in, on Gemini Live",
     tech: ["Gemini Live", "WebSockets", "Next.js", "FastAPI", "Web Audio API", "TypeScript"],
     role: "Builder — end to end",
@@ -263,6 +263,68 @@ export const experiments: Experiment[] = [
           label: "hybrid retrieval",
           steps: ["embedding search", "graph expansion", "rerank", "return"],
           result: "7 hits: 3 from pure vector similarity, 4 expanded via graph neighbours. merged and reranked.",
+        },
+      ],
+    },
+  },
+  {
+    id: "swara_lab",
+    name: "swara_lab",
+    tagline: "Upload a recording — get the notes, MIDI and a raga shortlist",
+    tech: ["PHP", "Python", "librosa pYIN", "PostgreSQL", "Vercel Container"],
+    role: "Builder — end to end",
+    problem:
+      "Practice recordings vanish into the void. Turning a hummed phrase into written swaras, MIDI and a raga shortlist normally means paid desktop tools and manual transcription.",
+    approach:
+      "A container-deployed pipeline: pYIN pitch extraction, note segmentation, an alto-saxophone written-scale transposition, sargam grouped beatwise in the carnatic style, and a tala auto-detected from the audio's onsets.",
+    contribution:
+      "Built the whole pipeline — upload, pitch analysis, sargam rendering, raga matching against a scale library, and a Postgres-backed library of past analyses.",
+    challenges:
+      "Pitch trackers lie on transitions, and the tala is whatever the player's hand is doing, not what a beat-tracker guesses. Honest UI beats confident guesses.",
+    learned:
+      "The last 5% of an audio pipeline is presentation: showing swaras the way a carnatic musician reads them matters more than another decimal of F1 score.",
+    demo: {
+      scenarios: [
+        {
+          label: "what does an upload return?",
+          steps: ["upload wav", "pYIN pitch track", "segment notes", "match ragas"],
+          result: "Sargam sheet + MIDI download + ranked raga shortlist. Sargam shown in the alto's written scale (A# base).",
+        },
+        {
+          label: "what about the tala?",
+          steps: ["onset detection", "beat tracking", "anga inference"],
+          result: "Tala auto-detected from the audio. The sargam is grouped beatwise so the counts line up.",
+        },
+      ],
+    },
+  },
+  {
+    id: "tala_lab",
+    name: "tala_lab",
+    tagline: "All 35 carnatic talas, performed by a rigged 3D hand",
+    tech: ["Three.js", "Web Audio API", "GLTF", "Vite"],
+    role: "Builder — end to end",
+    problem:
+      "Learning tala means watching a teacher's hand. Apps show dots and numbers; nothing demonstrates the gestures — the strike, the finger counts, the palm flip.",
+    approach:
+      "Build every tala from its angas, animate a rigged 3D hand through the authentic gestures — wrist strike, fingers folding in counting order (little, ring, middle, index, thumb), the palm turn-over for drutham — with a synthesized Sa-Pa tanpura drone and gati subdivisions.",
+    contribution:
+      "The tala engine, the 3D hand rig and its gesture system, the tanpura synth, and the 35-tala family/jaathi matrix.",
+    challenges:
+      "Finger motion is where fake hands give themselves away — the curl had to run joint by joint (knuckle-led, base-to-tip cascade) with the thumb sweeping across the palm. Turn-overs had to be sequenced, not overlapped.",
+    learned:
+      "Authenticity is choreography: the gestures are the product. Numbers on a grid teach nothing about where the beat lives in the hand.",
+    demo: {
+      scenarios: [
+        {
+          label: "what does adi talam look like?",
+          steps: ["clap strike", "little, ring, middle fold", "wave: turn over and strike"],
+          result: "The hand strikes, folds three fingers in order, then turns palm-over for the drutham — 8 aksharas, in time.",
+        },
+        {
+          label: "longer jaathis?",
+          steps: ["misra: 7 counts", "sankeerna: 9 counts"],
+          result: "The index and the thumb join the count before wrapping — every jaathi handled.",
         },
       ],
     },

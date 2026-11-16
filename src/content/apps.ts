@@ -57,14 +57,16 @@ export const DESKTOP_ICONS: AppId[] = [
 
 const CUSTOM_TITLES: Record<string, string> = {
   "perf:analysis": "performance_analysis.exe",
-  "exp:rag_chatbot": "rag_chatbot — experiments",
-  "exp:realtime_voice_agent": "realtime_voice_agent — experiments",
+  "exp:rag_chatbot": "docbrain — experiments",
+  "exp:realtime_voice_agent": "voxbox — experiments",
   "exp:ai_price_list_extraction": "ai_price_list_extraction — experiments",
   "exp:construction_cost_estimation": "construction_cost_estimation — experiments",
   "exp:product_alternative_discovery": "product_alternative_discovery — experiments",
   "exp:ai_code_review_agent": "ai_code_review_agent — experiments",
   "exp:video_captioning_research": "video_captioning_research — experiments",
   "exp:knowledge_graph_search": "knowledge_graph_search — experiments",
+  "exp:swara_lab": "swara_lab — experiments",
+  "exp:tala_lab": "tala_lab — experiments",
 };
 
 export function appDef(id: AppId): AppDef {
