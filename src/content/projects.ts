@@ -329,4 +329,35 @@ export const experiments: Experiment[] = [
       ],
     },
   },
+  {
+    id: "scout",
+    name: "scout",
+    tagline: "A research agent that reads Wikipedia and writes sourced briefs",
+    tech: ["Cloudflare Workers AI", "Pages Functions", "Wikipedia API", "SSE", "Vanilla JS"],
+    role: "Builder — end to end",
+    problem:
+      "Research questions deserve sources, not vibes. A real agent needs to plan, use tools, and know when to stop — all without an API key in the user's browser or a paid inference bill.",
+    approach:
+      "A strict JSON tool protocol over Workers AI on Cloudflare's free edge: the model thinks, calls search/read against Wikipedia's public APIs, and observations feed back into its context. The loop streams as SSE; a forced synthesis pass guarantees a brief even at the step limit.",
+    contribution:
+      "The agent loop with protocol repair, the Wikipedia tools, the SSE streaming endpoint as a Pages Function (same origin, no CORS), and a console-style live trace UI.",
+    challenges:
+      "Small models break JSON formats constantly — repair prompts rescue them. workers.dev is blocked for Indian visitors, so the agent had to ship inside the Pages deployment itself.",
+    learned:
+      "Agentic reliability is protocol engineering: strict schemas, repair passes and step pressure matter more than model size.",
+    demo: {
+      scenarios: [
+        {
+          label: "what does a run look like?",
+          steps: ["task in", "plan", "wikipedia search", "read pages", "synthesis"],
+          result: "A sourced brief streams live: every thought and tool call visible, sources linked at the end.",
+        },
+        {
+          label: "what if the model breaks the format?",
+          steps: ["parse fails", "repair prompt", "continue the loop"],
+          result: "The agent recovers mid-run — no dead ends, and the step limit always synthesizes a final brief.",
+        },
+      ],
+    },
+  },
 ];

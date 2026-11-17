@@ -66,6 +66,7 @@ const CUSTOM_TITLES: Record<string, string> = {
   "exp:video_captioning_research": "video_captioning_research — experiments",
   "exp:knowledge_graph_search": "knowledge_graph_search — experiments",
   "exp:swara_lab": "swara_lab — experiments",
+  "exp:scout": "scout — experiments",
   "exp:tala_lab": "tala_lab — experiments",
 };
 
